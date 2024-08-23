@@ -17,8 +17,6 @@ namespace smsCoffee.WebAPI.Data
                 .HasOne(u => u.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId);
-
-
         }
     }
 }
