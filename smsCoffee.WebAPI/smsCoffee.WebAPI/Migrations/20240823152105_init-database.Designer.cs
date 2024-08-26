@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using smsCoffee.WebAPI.Data;
 
+
 #nullable disable
 
 namespace smsCoffee.WebAPI.Migrations

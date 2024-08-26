@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using smsCoffee.WebAPI.DTOs.RoleDto;
+using smsCoffee.WebAPI.DTOs.UserDto;
 using smsCoffee.WebAPI.Models;
 
 namespace smsCoffee.WebAPI.Mappers
@@ -11,6 +12,9 @@ namespace smsCoffee.WebAPI.Mappers
             CreateMap<Role,RoleDto>().ReverseMap();
             CreateMap<Role,AddingRoleDto>().ReverseMap();
             CreateMap<Role,UpdatingRoleDto>().ReverseMap();
+            CreateMap<User,UserDto>().ReverseMap();
+            CreateMap<User, AddingUserDto>().ReverseMap();
+            CreateMap<User,UpdatingUserDto>().ReverseMap();
         }
     }
 }
