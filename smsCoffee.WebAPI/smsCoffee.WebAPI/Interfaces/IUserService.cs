@@ -11,5 +11,6 @@ namespace smsCoffee.WebAPI.Interfaces
         Task<User?> UpdateUserByIdAsync(int UserId, UpdatingUserDto updatingUserDto);
         Task<User> CreatingUserAsync(AddingUserDto addingUserDto);
         Task<User?> DeletingUserByIdAsync(int UserId);
+        Task<User?> CheckingLoginAsync(string username, string password);
     }
 }

@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using smsCoffee.WebAPI.Models;
+using System.Data;
 
 namespace smsCoffee.WebAPI.Data
 {
-    public class CoffeeDbContext : IdentityDbContext<IdentityUser>
+    public class CoffeeDbContext : IdentityDbContext<AppUser>
     {
         public CoffeeDbContext(DbContextOptions<CoffeeDbContext> options) : base(options)
         {
@@ -19,6 +20,20 @@ namespace smsCoffee.WebAPI.Data
                 .HasOne(u => u.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId);
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                },
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
         }
     }
 }

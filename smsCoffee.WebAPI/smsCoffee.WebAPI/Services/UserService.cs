@@ -17,6 +17,11 @@ namespace smsCoffee.WebAPI.Services
             _mapper = mapper;
             _context = context;
         }
+        //checking login
+        public async Task<User?> CheckingLoginAsync(string username, string password)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == username && u.Password == password);
+        }
         public async Task<User> CreatingUserAsync(AddingUserDto addingUserDto)
         {
             var user = _mapper.Map<User>(addingUserDto);
