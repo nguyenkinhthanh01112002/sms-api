@@ -7,9 +7,10 @@ using smsCoffee.WebAPI.Interfaces;
 
 namespace smsCoffee.WebAPI.Controllers
 {
-   
+    
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
