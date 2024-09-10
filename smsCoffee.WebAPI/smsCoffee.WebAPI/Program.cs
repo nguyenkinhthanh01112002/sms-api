@@ -55,7 +55,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = true;
     options.Password.RequiredLength = 12;
 })
-.AddEntityFrameworkStores<CoffeeDbContext>();
+.AddEntityFrameworkStores<CoffeeDbContext>()
+.AddDefaultTokenProviders();
+builder.Services.AddIdentityCore<AppUser>(options => { })
+    .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme =
@@ -81,9 +84,9 @@ builder.Services.AddAuthentication(options =>
 // Register AutoMapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();  
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

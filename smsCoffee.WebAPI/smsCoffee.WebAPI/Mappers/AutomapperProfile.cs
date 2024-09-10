@@ -12,9 +12,6 @@ namespace smsCoffee.WebAPI.Mappers
             CreateMap<Role,RoleDto>().ReverseMap();
             CreateMap<Role,AddingRoleDto>().ReverseMap();
             CreateMap<Role,UpdatingRoleDto>().ReverseMap();
-            CreateMap<User,UserDto>().ReverseMap();
-            CreateMap<User, AddingUserDto>().ReverseMap();
-            CreateMap<User,UpdatingUserDto>().ReverseMap();
         }
     }
 }

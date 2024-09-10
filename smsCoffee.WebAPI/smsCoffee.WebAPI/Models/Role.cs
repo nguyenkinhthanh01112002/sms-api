@@ -8,6 +8,5 @@ namespace smsCoffee.WebAPI.Models
         
         [Required]
         public string RoleName { get; set; }
-        public ICollection<User>? Users { get; set; }
     }
 }

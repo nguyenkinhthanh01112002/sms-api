@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using smsCoffee.WebAPI.Data;
 
@@ -11,9 +12,11 @@ using smsCoffee.WebAPI.Data;
 namespace smsCoffee.WebAPI.Migrations
 {
     [DbContext(typeof(CoffeeDbContext))]
-    partial class CoffeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910060459_MakeRefreshTokenNullable")]
+    partial class MakeRefreshTokenNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace smsCoffee.WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6548af45-3209-41ad-96c6-5b6f8a684f63",
+                            Id = "dd5fdd57-bc50-4ed9-b601-fcae0eea7e2c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "005a1d9d-4652-4c96-b23c-2f76f99e9337",
+                            Id = "49cf470d-2b90-4c85-9993-c469bd609282",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -204,12 +207,6 @@ namespace smsCoffee.WebAPI.Migrations
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordResetToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PasswordResetTokenExpiration")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");

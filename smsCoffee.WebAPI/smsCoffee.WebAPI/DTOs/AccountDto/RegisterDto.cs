@@ -4,12 +4,13 @@ namespace smsCoffee.WebAPI.DTOs.AccountDto
 {
     public class RegisterDto
     {
-        [Required]
-        public string? UserName { get; set; }
-        [Required]
+        
+        [EmailAddress]
         public string? Email { get; set; }
+        [Phone]
+        public string ?PhoneNumber { get; set; }
         [Required]
-        public string? PassWord { get; set; }
+        public string PassWord { get; set; }
         
     }
 }

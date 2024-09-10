@@ -1,9 +1,12 @@
 ﻿using smsCoffee.WebAPI.Models;
+using System.Security.Claims;
 
 namespace smsCoffee.WebAPI.Interfaces
 {
     public interface ITokenService
     {
-        string CreateToken(AppUser user);
+        Task<string> CreateToken(AppUser user);
+        string CreateRefreshToken();
+        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }

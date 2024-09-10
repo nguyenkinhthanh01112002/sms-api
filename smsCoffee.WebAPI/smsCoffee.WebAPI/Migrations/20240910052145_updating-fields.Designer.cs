@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using smsCoffee.WebAPI.Data;
 
@@ -11,9 +12,11 @@ using smsCoffee.WebAPI.Data;
 namespace smsCoffee.WebAPI.Migrations
 {
     [DbContext(typeof(CoffeeDbContext))]
-    partial class CoffeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910052145_updating-fields")]
+    partial class updatingfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace smsCoffee.WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6548af45-3209-41ad-96c6-5b6f8a684f63",
+                            Id = "2ee35a4b-f463-490f-9164-3326a4bad70c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "005a1d9d-4652-4c96-b23c-2f76f99e9337",
+                            Id = "eb1e04f1-6038-4ef4-9f70-f1a90ef892d0",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -205,12 +208,6 @@ namespace smsCoffee.WebAPI.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordResetToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PasswordResetTokenExpiration")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -218,9 +215,10 @@ namespace smsCoffee.WebAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RefreshToken")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
