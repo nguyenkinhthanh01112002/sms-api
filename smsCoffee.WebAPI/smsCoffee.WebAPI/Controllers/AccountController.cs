@@ -10,7 +10,7 @@ using smsCoffee.WebAPI.Utilities;
 
 namespace smsCoffee.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -24,7 +24,6 @@ namespace smsCoffee.WebAPI.Controllers
             _tokenService = tokenService;
             _signInManager = signInManager;
             _emailService = emailService;
-
         }
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -83,52 +82,44 @@ namespace smsCoffee.WebAPI.Controllers
             }
         }
         [HttpGet("GetUserRoles/{userName}")]
-        public async Task<IActionResult> GetUserRoles(string userName)
-        {
-            if (string.IsNullOrEmpty(userName))
-            {
-                return BadRequest("Username cannot be null or empty.");
-            }
-
-            var user = await _userManager.FindByNameAsync(userName);
-            if (user == null)
-            {
-                return NotFound($"User '{userName}' not found.");
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            if (roles == null || !roles.Any())
-            {
-                return Ok(new { UserName = userName, Roles = new List<string>(), Message = "User has no roles assigned." });
-            }
-
-            return Ok(new { UserName = userName, Roles = roles });
-        }
+              
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+           
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var user = await FindUserByEmailOrPhoneAsync(loginDto.EmailOrPhone);
-
             if (user == null)
-                return Unauthorized("Invalid credentials.");
+            {
+                return Unauthorized();
+            }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-
             if (!result.Succeeded)
-                return Unauthorized("Invalid credentials.");
+            {
+                return Unauthorized();
+            }
 
             var userDto = await GenerateUserDtoAsync(user);
             var refreshToken = _tokenService.CreateRefreshToken();
-
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userManager.UpdateAsync(user);
+            // Assuming token expiration is set to 1 hour (3600 seconds)
+            int expiresIn = 3600;
 
-            return Ok(new { AccessToken = userDto.Token, RefreshToken = refreshToken, User = userDto });
+
+
+            return Ok(new LoginResponseDto
+            {
+                AccessToken = userDto.Token,
+                RefreshToken = refreshToken,
+                ExpireTime = expiresIn
+            });
         }
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
@@ -136,7 +127,7 @@ namespace smsCoffee.WebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.EmailOrPhone);
             if (user == null)
                 return Ok(); // Don't reveal that the user does not exist
 
@@ -151,41 +142,49 @@ namespace smsCoffee.WebAPI.Controllers
             await _emailService.SendEmailAsync(user.Email, "Password Reset Verification Code",
                 $"Your verification code is: {verificationCode}. This code will expire in 1 hour.");
 
-            return Ok();
+            return Ok(new { verificationCode });
         }
 
-        [HttpPost("verify-reset-code")]
+        [HttpPost("verify-reset-otp")]
         public async Task<IActionResult> VerifyResetCode([FromBody] VerifyResetCodeDto dto)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || user.PasswordResetToken != dto.Code ||
+            var user = await _userManager.FindByEmailAsync(dto.EmailOrPhone  );
+            if (user == null || user.PasswordResetToken != dto.Otp ||
                 user.PasswordResetTokenExpiration < DateTime.UtcNow)
             {
                 return BadRequest("Invalid or expired code.");
             }
 
-            return Ok(new { Message = "Code verified successfully." });
+            return Ok(new { emailOrPhone = dto.EmailOrPhone, code = dto.Otp });
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto, [FromQuery] string otp)
         {
-            var user = await _userManager.FindByEmailAsync(dto.Email);
-            if (user == null || user.PasswordResetToken != dto.Code ||
-                user.PasswordResetTokenExpiration < DateTime.UtcNow)
+            if (string.IsNullOrEmpty(otp))
             {
-                return BadRequest("Invalid or expired code.");
+                return BadRequest(new {otp = "InvalidToken", description = "Mã xác thực không được để trống." });
             }
 
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user, resetToken, dto.NewPassword);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == otp);
+            if (user == null)
+            {
+                return BadRequest(new { otp = "InvalidToken", description = "Mã xác thực không hợp lệ hoặc đã hết hạn." });
+            }
 
+            if (user.PasswordResetTokenExpiration < DateTime.UtcNow)
+            {
+                return BadRequest(new { otp = "InvalidToken", description = "Mã xác thực đã hết hạn." });
+            }
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            // Tiếp tục xử lý reset password nếu token hợp lệ
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, dto.NewPassword);
             if (result.Succeeded)
             {
                 user.PasswordResetToken = null;
                 user.PasswordResetTokenExpiration = null;
                 await _userManager.UpdateAsync(user);
-                return Ok(new { Message = "Password has been reset successfully." });
+                return Ok(new { message = "Đặt lại mật khẩu thành công." });
             }
 
             return BadRequest(result.Errors);

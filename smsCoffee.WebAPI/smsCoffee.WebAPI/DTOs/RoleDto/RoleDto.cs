@@ -4,7 +4,7 @@ namespace smsCoffee.WebAPI.DTOs.RoleDto
 {
     public class RoleDto
     {
-        public int RoleId { get; set; }
-        public string RoleName { get; set; }
+        public string roleId { get; set; }
+        public string roleName { get; set; }
     }
 }

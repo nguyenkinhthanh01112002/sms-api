@@ -5,6 +5,6 @@ namespace smsCoffee.WebAPI.DTOs.RoleDto
     public class UpdatingRoleDto
     {
         [Required]
-        public string RoleName { get; set; }
+        public string roleName { get; set; }
     }
 }

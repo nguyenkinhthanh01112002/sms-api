@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using System.Net;
 
-namespace smsCoffee.WebAPI.Services
+namespace smsCoffee.WebAPI.Services.CommonService
 {
     public class EmailService : IEmailService
     {

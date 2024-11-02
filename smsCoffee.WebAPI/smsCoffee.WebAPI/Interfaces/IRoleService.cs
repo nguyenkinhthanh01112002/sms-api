@@ -1,14 +1,15 @@
-﻿using smsCoffee.WebAPI.DTOs.RoleDto;
+﻿using Microsoft.AspNetCore.Identity;
+using smsCoffee.WebAPI.DTOs.RoleDto;
 using smsCoffee.WebAPI.Models;
 
 namespace smsCoffee.WebAPI.Interfaces
 {
     public interface IRoleService
     {
-        Task<List<Role>> GetAllRolesAsync();
-        Task<Role?> GetRoleByIdAsync(int RoleId);
-        Task<Role?> UpdateRoleByIdAsync(int RoleId, UpdatingRoleDto updatingRoleDto);
-        Task<Role> CreatingRoleAsync(AddingRoleDto addingRoleDto);
-        Task<Role?> DeletingRoleByIdAsync(int RoleId);
+        Task<List<IdentityRole>> GetRolesAsync();
+        Task<IdentityRole?> GetRoleByIdAsync(string roleId);
+        Task<IdentityRole?> UpdateRoleByIdAsync(string roleId, UpdatingRoleDto updatingRoleDto);
+        Task<IdentityRole?> CreateRoleAsync(AddingRoleDto addingRoleDto);
+        Task<IdentityRole?> DeleteRoleByIdAsync(string roleId);
     }
 }

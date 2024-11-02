@@ -6,6 +6,6 @@ namespace smsCoffee.WebAPI.DTOs.AccountDto
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string EmailOrPhone { get; set; }
     }
 }

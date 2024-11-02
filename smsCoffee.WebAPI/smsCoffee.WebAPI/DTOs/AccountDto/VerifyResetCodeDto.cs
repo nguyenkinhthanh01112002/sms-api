@@ -1,8 +1,8 @@
 ﻿namespace smsCoffee.WebAPI.DTOs.AccountDto
 {
-    public class VerifyResetCodeDto
+    public class VerifyResetCodeDto  
     {
-        public string Email { get; set; }
-        public string Code { get; set; }
+        public string EmailOrPhone { get; set; }
+        public string Otp { get; set; }
     }
 }
